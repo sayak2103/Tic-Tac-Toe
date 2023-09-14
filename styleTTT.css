@@ -1,0 +1,45 @@
+*{
+    text-align: center;
+    
+}
+
+body{
+    height: 100vh;
+    background-image: linear-gradient(to bottom, #9cffc3, #d1e590, #f6c781, #ffab92, #f699b1);
+}
+
+.outbox{
+    height: 25rem;
+    width: 25rem;
+    display: inline-flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.inbox{
+    height: 33.333%;
+    width: 33.333%;
+    border: 0.15rem solid #5B082B;
+}
+
+.remove-border-bottom{
+    border-bottom-color: transparent;
+}
+
+.remove-border-top{
+    border-top-color: transparent;
+}
+
+.remove-border-left{
+    border-left-color: transparent;
+}
+
+.remove-border-right{
+    border-right-color: transparent;
+}
+
+.buttons{
+    width: 33%;
+    display: inline-flex;
+    justify-content: space-evenly;
+}
