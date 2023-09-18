@@ -6,7 +6,7 @@ let start=document.querySelector("#start");
 let comp=document.querySelector("#comp");
 let hum=document.querySelector("#human");
 let ins=document.querySelector(".instruct");
-let gameMode;
+let gameMode='d';
 let symbol=["<i class='fa-solid fa-xmark fa-8x'></i>","<i class='fa-solid fa-o fa-7x'></i>"]// 
 let isymb=0;
 let countx,counto,r,c;
@@ -24,6 +24,7 @@ let result;        //stores the result once the game has ended
 let def=[[]];     //array to store all the possible defnsive moves
 let att=[[]];     //array to store all the possible attacking moves
 let id,ia;
+let count=0;
 id=ia=0;
 
 const Check={    
@@ -175,7 +176,7 @@ function giveMove()
     defend();
     let w=attack();
 
-    if(status==false)
+    if(!status)
     return;
 
     let r,c;
@@ -204,9 +205,26 @@ function giveMove()
     }
 }
 
-function gamePlay()
+function ending()
 {
-
+    if(gameMode==1)
+    {
+        if(result=='x')
+        ins.innerHTML="Congratulations, You've won ";
+        else if(result=='o')
+        ins.innerHTML="You've lost, Better Luck next time...";
+        else
+        ins.innerHTML="The game ends in a draw, nice game...";
+    }
+    else if(gameMode==2)
+    {
+        if(result=='x')
+        ins.innerHTML="Congratulations, PLAYER 1 won...";
+        else if(result=='o')
+        ins.innerHTML="Congratulations, PLAYER 2 won...";
+        else
+        ins.innerHTML="The game ends in a draw, nice game...";
+    }
 }
 
 start.addEventListener("click",()=>{
@@ -215,6 +233,7 @@ start.addEventListener("click",()=>{
     hum.disabled=false;
     comp.disabled=false;
     start.disabled=true;
+    count=0;
     ins.innerText="Choose the game mode";
 });
 
@@ -224,6 +243,7 @@ comp.addEventListener("click",()=>{
     input=true;
     hum.disabled=true;
     comp.disabled=true;
+    status=true;
 });
 
 hum.addEventListener("click",()=>{
@@ -232,11 +252,13 @@ hum.addEventListener("click",()=>{
     input=true;
     hum.disabled=true;
     comp.disabled=true;
+    status=true;
 });
 
 for(inbox of inboxes)
 {
     inbox.addEventListener("click",()=>{
+        count++;
         if(input)
         {
             if(isymb==1)
@@ -253,20 +275,46 @@ for(inbox of inboxes)
             }
             
             if(gameMode==1)
-            {
+            {   
+                if(count==9)
+                    status=false;
+                
+                ins.innerText="The Machine is thinking ........"
                 input=false;
+                setTimeout(()=>{
+                    count++;
+                    giveMove();
+                    if(status)
+                    ins.innerText="it's your turn, give your move."
+                    else
+                    ending();
+                },1500);
             }
             else
             {
-                
+                if(isymb==1)
+                {
+                    if(count==9)
+                        status=false;
+                    Check.row('x','o');
+                    Check.column('x','o');
+                    Check.diagonanl('x','o');
+                    if(status)
+                        ins.innerText="PLAYER 2 it's your turn";
+                    else
+                        ending();
+                }
+                else if(isymb==0)
+                {
+                    Check.row('o','x');
+                    Check.column('o','x');
+                    Check.diagonanl('o','x');
+                    if(status)
+                        ins.innerText="PLAYER 1 it's your turn";
+                    else
+                        ending();
+                }
             }
         }
     });
 }
-// function test(){
-//     arr[0][0].innerHTML=arr[2][2].innerHTML=symbol[isymb];
-//     arr[0][0].title=arr[2][2].title='x';
-//     defend();
-// }
-
-// test();
