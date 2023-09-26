@@ -18,7 +18,7 @@ let arr=[
 ];
 
 let i,j;
-let status=false;
+let status=0;
 let input=false;       //determines tif the game is still running or ended
 let result;        //stores the result once the game has ended
 let def=[[]];     //array to store all the possible defnsive moves
@@ -39,10 +39,10 @@ const Check={
                     {counto++;r=i;c=j;}    
             
             if(countx==2 && counto==1)
-        {att.push([r,c]);
+        {att[ia]=[r,c];
         ia++;}
         else if(countx==3)
-        {status=false;
+        {status=0;
         result=f;
         }
         countx=counto=0;
@@ -60,10 +60,10 @@ const Check={
                     {counto++;r=j;c=i;}    
             
             if(countx==2 && counto==1)
-        {att.push([r,c]);
+        {att[ia]=[r,c];
         ia++;}
         else if(countx==3)
-        {status=false;
+        {status=0;
         result=f;
         }
         countx=counto=0;
@@ -79,11 +79,11 @@ const Check={
                 {counto++;r=i;c=i;}
     
         if(countx==2 && counto==1)
-        {att.push([r,c]);
+        {att[ia]=[r,c];
         ia++;
         }
         else if(countx==3)
-        {status=false;
+        {status=0;
         result=f;
         }
         countx=counto=0;
@@ -97,11 +97,11 @@ const Check={
         }
 
         if(countx==2 && counto==1)
-        {att.push([r,c]);
+        {att[ia]=[r,c];
         ia++;
         }
         else if(countx==3)
-        {status=false;
+        {status=0;
         result=f;
         }
         countx=counto=0;
@@ -110,24 +110,25 @@ const Check={
 
 function defend()
 {
-    for(;ia>=1;ia--)att.pop();
-    for(;id>=1;id--)def.pop();
-    
     Check.row('x','o');
     Check.column('x','o');
     Check.diagonanl('x','o');
     
     for(i=1;i<=ia;i++)
-    def.push(att[i]);
-    for(;ia>=1;ia--)
-    att.pop();
+    {def[id]=att[i];
+    id++;}
+
+    ia=1;
 }
 
 function attack(){
+
+    console.log("before attack :",att);
     Check.row('o','x');
     Check.column('o','x');
     Check.diagonanl('o','x');
 
+    console.log("after attack :",att);
     if(ia>0)
     return 1; //returns 1 if there's a winning chance , if we can win then don't defend, attack .
 
@@ -146,20 +147,23 @@ function attack(){
         if(rco==1 && rcs==2)
             for(j=0;j<3;j++)
                 if(arr[i][j].title!='o')
-                {att.push([i,j]);ia++;}
+                {att[ia]=[i,j];ia++;}
 
         if(cco==1 && ccs==2)
             for(j=0;j<3;j++)
                 if(arr[j][i].title!='o')
-                {att.push([j,i]);ia++;}
+                {att[ia]=[j,i];
+                    ia++;}
 
         if(rcs==3)
             for(j=0;j<3;j++)
-                {att.push([i,j]);ia++;}
+                {att[ia]=[i,j];
+                    ia++;}
 
         if(ccs==3)
             for(j=0;j<3;j++)
-                {att.push([j,i]);ia++;}
+                {att[ia]=[j,i];
+                    ia++;}
 
         rco=rcs=cco=ccs=0;
     }
@@ -167,16 +171,18 @@ function attack(){
     for(i=0;i<3;i++)
         for(j=0;j<3;j++)
             if(arr[i][j].title!='x' && arr[i][j].title!='o')
-            {att.push([i,j]);ia++;}
+            {att[ia]=[i,j];
+                ia++;}
     return 0;
 }
 
 function giveMove()
 {
+    ia=id=1;
     defend();
     let w=attack();
 
-    if(!status)
+    if(status==0)
     return;
 
     let r,c;
@@ -188,25 +194,24 @@ function giveMove()
 
     if(r==-1 && id!=0 && w!=1)
     {
-        r=def[0][0];
-        c=def[0][1];
+        r=def[1][0];
+        c=def[1][1];
     }
     else if (r==-1)
     {
-        r=att[0][0];
-        c=att[0][1];
+        r=att[1][0];
+        c=att[1][1];
     }
 
-    if(isymb==1)
-    {
-        arr[r][c].innerHTML=symbol[isymb];
+        arr[r][c].innerHTML=symbol[1];
         arr[r][c].title='o';
         isymb=0;
-    }
+    input=true;
 }
 
 function ending()
 {
+    input=false;
     if(gameMode==1)
     {
         if(result=='x')
@@ -227,6 +232,68 @@ function ending()
     }
 }
 
+function gameplay(num)
+{
+    count++;
+        if(input)
+        {
+            if(isymb==1)
+            {
+                inboxes[num].innerHTML=symbol[isymb];
+                inboxes[num].title='o';
+                isymb=0;
+            }
+            else if(isymb==0)
+            {
+                inboxes[num].innerHTML=symbol[isymb];
+                inboxes[num].title='x';
+                isymb=1;
+            }
+            
+            if(gameMode==1)
+            {   
+                if(count==9)
+                    status=0;
+                
+                ins.innerText="The Machine is thinking ........"
+                input=false;
+                
+                    count++;
+                    giveMove();
+                    if(status==1)
+                    ins.innerText="it's your turn, give your move."
+                    else
+                    ending();
+                
+            }
+            else
+            {
+                if(isymb==1)
+                {
+                    if(count==9)
+                        status=0;
+                    Check.row('x','o');
+                    Check.column('x','o');
+                    Check.diagonanl('x','o');
+                    if(status==1)
+                        ins.innerText="PLAYER 2 it's your turn";
+                    else
+                        ending();
+                }
+                else if(isymb==0)
+                {
+                    Check.row('o','x');
+                    Check.column('o','x');
+                    Check.diagonanl('o','x');
+                    if(status==1)
+                        ins.innerText="PLAYER 1 it's your turn";
+                    else
+                        ending();
+                }
+            }
+        }
+}
+
 start.addEventListener("click",()=>{
     for(inbox of inboxes)
     inbox.innerHTML="";
@@ -243,7 +310,7 @@ comp.addEventListener("click",()=>{
     input=true;
     hum.disabled=true;
     comp.disabled=true;
-    status=true;
+    status=1;
 });
 
 hum.addEventListener("click",()=>{
@@ -252,69 +319,42 @@ hum.addEventListener("click",()=>{
     input=true;
     hum.disabled=true;
     comp.disabled=true;
-    status=true;
+    status=1;
 });
 
-for(inbox of inboxes)
+inboxes[0].addEventListener("click",()=>
 {
-    inbox.addEventListener("click",()=>{
-        count++;
-        if(input)
-        {
-            if(isymb==1)
-            {
-                inbox.innerHTML=symbol[isymb];
-                inbox.title='o';
-                isymb=0;
-            }
-            if(isymb==0)
-            {
-                inbox.innerHTML=symbol[isymb];
-                inbox.title='x';
-                isymb=1;
-            }
-            
-            if(gameMode==1)
-            {   
-                if(count==9)
-                    status=false;
-                
-                ins.innerText="The Machine is thinking ........"
-                input=false;
-                setTimeout(()=>{
-                    count++;
-                    giveMove();
-                    if(status)
-                    ins.innerText="it's your turn, give your move."
-                    else
-                    ending();
-                },1500);
-            }
-            else
-            {
-                if(isymb==1)
-                {
-                    if(count==9)
-                        status=false;
-                    Check.row('x','o');
-                    Check.column('x','o');
-                    Check.diagonanl('x','o');
-                    if(status)
-                        ins.innerText="PLAYER 2 it's your turn";
-                    else
-                        ending();
-                }
-                else if(isymb==0)
-                {
-                    Check.row('o','x');
-                    Check.column('o','x');
-                    Check.diagonanl('o','x');
-                    if(status)
-                        ins.innerText="PLAYER 1 it's your turn";
-                    else
-                        ending();
-                }
-            }
-        }
-    });
-}
+    gameplay(0);
+});
+inboxes[1].addEventListener("click",()=>
+{
+    gameplay(1);
+});
+inboxes[2].addEventListener("click",()=>
+{
+    gameplay(2);
+});
+inboxes[3].addEventListener("click",()=>
+{
+    gameplay(3);
+});
+inboxes[4].addEventListener("click",()=>
+{
+    gameplay(4);
+});
+inboxes[5].addEventListener("click",()=>
+{
+    gameplay(5);
+});
+inboxes[6].addEventListener("click",()=>
+{
+    gameplay(6);
+});
+inboxes[7].addEventListener("click",()=>
+{
+    gameplay(7);
+});
+inboxes[8].addEventListener("click",()=>
+{
+    gameplay(8);
+});
