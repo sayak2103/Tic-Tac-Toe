@@ -8,7 +8,7 @@ let hum=document.querySelector("#human");
 let ins=document.querySelector(".instruct");
 let gameMode='d';
 let symbol=["<i class='fa-solid fa-xmark fa-8x'></i>","<i class='fa-solid fa-o fa-7x'></i>"]// 
-let isymb=0;
+let isymb;
 let countx,counto,r,c;
 
 let arr=[
@@ -114,9 +114,6 @@ function defend()
     
     while(att.length>1)
     {def.push(att.pop());}
-
-    console.log("in defend att len ",att.length);
-    console.log("in defend def len ",def.length);
 }
 
 function attack(){
@@ -195,9 +192,6 @@ function giveMove()
     defend();
     let w=attack();
 
-    console.log("after attack att len",att.length);
-    console.log(att);
-    console.log();
     if(status==0)
     return;
 
@@ -264,10 +258,13 @@ function ending()
         else
         ins.innerHTML="The game ends in a draw, nice game...";
     }
+    start.disabled=false;
 }
 
 function gameplay(num)
 {
+    if(inboxes[num].title!='')
+    return;
     count++;
         if(input)
         {
@@ -331,6 +328,11 @@ function gameplay(num)
 start.addEventListener("click",()=>{
     for(inbox of inboxes)
     inbox.innerHTML="";
+
+    for(i=0;i<3;i++)
+        for(j=0;j<3;j++)
+            arr[i][j].title='';
+    
     hum.disabled=false;
     comp.disabled=false;
     start.disabled=true;
@@ -345,6 +347,7 @@ comp.addEventListener("click",()=>{
     hum.disabled=true;
     comp.disabled=true;
     status=1;
+    isymb=0;
 });
 
 hum.addEventListener("click",()=>{
@@ -354,6 +357,7 @@ hum.addEventListener("click",()=>{
     hum.disabled=true;
     comp.disabled=true;
     status=1;
+    isymb=0;
 });
 
 inboxes[0].addEventListener("click",()=>
