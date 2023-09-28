@@ -18,7 +18,7 @@ let arr=[
 ];
 
 let i,j;
-let status=0;
+let status;
 let input=false;       //determines tif the game is still running or ended
 let result;        //stores the result once the game has ended
 let def=[[]];     //array to store all the possible defnsive moves
@@ -265,9 +265,10 @@ function gameplay(num)
 {
     if(inboxes[num].title!='')
     return;
-    count++;
+    
         if(input)
         {
+            count++;
             if(isymb==1)
             {
                 inboxes[num].innerHTML=symbol[isymb];
@@ -286,13 +287,13 @@ function gameplay(num)
                 if(count==9)
                     status=0;
                 
-                ins.innerText="The Machine is thinking ........"
+                ins.innerText="The Machine is thinking ........";
                 input=false;
                 
                     count++;
                     giveMove();
                     if(status==1)
-                    ins.innerText="it's your turn, give your move."
+                    ins.innerText="it's your turn, give your move.";
                     else
                     ending();
                 
@@ -337,6 +338,7 @@ start.addEventListener("click",()=>{
     comp.disabled=false;
     start.disabled=true;
     count=0;
+    result='';
     ins.innerText="Choose the game mode";
 });
 
