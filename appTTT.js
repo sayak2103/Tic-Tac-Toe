@@ -23,9 +23,7 @@ let input=false;       //determines tif the game is still running or ended
 let result;        //stores the result once the game has ended
 let def=[[]];     //array to store all the possible defnsive moves
 let att=[[]];     //array to store all the possible attacking moves
-let id,ia;
 let count=0;
-id=ia=0;
 
 const Check={    
     row: function(f,a){
@@ -40,7 +38,7 @@ const Check={
             
             if(countx==2 && counto==1)
         {att.push([r,c]);
-        ia++;}
+        }
         else if(countx==3)
         {status=0;
         result=f;
@@ -61,7 +59,7 @@ const Check={
             
             if(countx==2 && counto==1)
             {att.push([r,c]);
-            ia++;}
+            }
             else if(countx==3)
             {status=0;
             result=f;
@@ -80,7 +78,7 @@ const Check={
     
         if(countx==2 && counto==1)
         {att.push([r,c]);
-        ia++;
+        
         }
         else if(countx==3)
         {status=0;
@@ -98,7 +96,7 @@ const Check={
 
         if(countx==2 && counto==1)
         {att.push([r,c]);
-        ia++;
+        
         }
         else if(countx==3)
         {status=0;
@@ -115,8 +113,7 @@ function defend()
     Check.diagonanl('x','o');
     
     while(att.length>1)
-    {def.push(att.pop());
-    id++;}
+    {def.push(att.pop());}
 
     console.log("in defend att len ",att.length);
     console.log("in defend def len ",def.length);
@@ -146,13 +143,13 @@ function attack(){
         if(rco==1 && rcs==2)
             for(j=0;j<3;j++)
                 if(arr[i][j].title!='o')
-                {att.push([i,j]);ia++;}
+                {att.push([i,j]);}
 
         if(cco==1 && ccs==2)
             for(j=0;j<3;j++)
                 if(arr[j][i].title!='o')
                 {att.push([j,i]);
-                    ia++;}
+                    }
         rco=rcs=cco=ccs=0;
     }
     for(i=0;i<3;i++)
