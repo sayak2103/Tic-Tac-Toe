@@ -39,7 +39,7 @@ const Check={
                     {counto++;r=i;c=j;}    
             
             if(countx==2 && counto==1)
-        {att[ia]=[r,c];
+        {att.push([r,c]);
         ia++;}
         else if(countx==3)
         {status=0;
@@ -60,12 +60,12 @@ const Check={
                     {counto++;r=j;c=i;}    
             
             if(countx==2 && counto==1)
-        {att[ia]=[r,c];
-        ia++;}
-        else if(countx==3)
-        {status=0;
-        result=f;
-        }
+            {att.push([r,c]);
+            ia++;}
+            else if(countx==3)
+            {status=0;
+            result=f;
+            }
         countx=counto=0;
         }
     },
@@ -79,7 +79,7 @@ const Check={
                 {counto++;r=i;c=i;}
     
         if(countx==2 && counto==1)
-        {att[ia]=[r,c];
+        {att.push([r,c]);
         ia++;
         }
         else if(countx==3)
@@ -97,7 +97,7 @@ const Check={
         }
 
         if(countx==2 && counto==1)
-        {att[ia]=[r,c];
+        {att.push([r,c]);
         ia++;
         }
         else if(countx==3)
@@ -114,22 +114,21 @@ function defend()
     Check.column('x','o');
     Check.diagonanl('x','o');
     
-    for(i=1;i<=ia;i++)
-    {def[id]=att[i];
+    while(att.length>1)
+    {def.push(att.pop());
     id++;}
 
-    ia=1;
+    console.log("in defend att len ",att.length);
+    console.log("in defend def len ",def.length);
 }
 
 function attack(){
 
-    console.log("before attack :",att);
     Check.row('o','x');
     Check.column('o','x');
     Check.diagonanl('o','x');
 
-    console.log("after attack :",att);
-    if(ia>0)
+    if(att.length>1)
     return 1; //returns 1 if there's a winning chance , if we can win then don't defend, attack .
 
     let rco,rcs;//row_count_o  row_count_empty
@@ -147,41 +146,61 @@ function attack(){
         if(rco==1 && rcs==2)
             for(j=0;j<3;j++)
                 if(arr[i][j].title!='o')
-                {att[ia]=[i,j];ia++;}
+                {att.push([i,j]);ia++;}
 
         if(cco==1 && ccs==2)
             for(j=0;j<3;j++)
                 if(arr[j][i].title!='o')
-                {att[ia]=[j,i];
+                {att.push([j,i]);
                     ia++;}
-
-        if(rcs==3)
-            for(j=0;j<3;j++)
-                {att[ia]=[i,j];
-                    ia++;}
-
-        if(ccs==3)
-            for(j=0;j<3;j++)
-                {att[ia]=[j,i];
-                    ia++;}
-
         rco=rcs=cco=ccs=0;
     }
+    for(i=0;i<3;i++)
+    {
+        if(arr[i][i].title=='o')rco++;
+        else if(arr[i][i].title!='x')rcs++;
+    }
+    if(rcs==2 && rco==1)
+        for(i=0;i<3;i++)
+            if(arr[i][i].title!='x')
+                att.push([i,i]);
+
+    rco=rcs=0;
+    for(i=0;i<3;i++)
+    {
+        if(arr[i][2-i].title=='o')rco++;
+        else if(arr[i][2-i].title!='x')rcs++;
+    }
+    if(rcs==2 && rco==1)
+        for(i=0;i<3;i++)
+        if(arr[i][2-i].title!='x')
+            att.push([i,2-i]);
+
+    rco=rcs=0;
+
+    if(att.length>1)
+    return 2;
 
     for(i=0;i<3;i++)
         for(j=0;j<3;j++)
-            if(arr[i][j].title!='x' && arr[i][j].title!='o')
-            {att[ia]=[i,j];
-                ia++;}
-    return 0;
+            if(arr[i][j].title!='o' && arr[i][j].title!='x')
+                att.push([i,j]);
+    return 3;
 }
 
 function giveMove()
 {
-    ia=id=1;
+    while(def.length>1)
+        def.pop();
+    while(att.length>1)
+        att.pop();
+    
     defend();
     let w=attack();
 
+    console.log("after attack att len",att.length);
+    console.log(att);
+    console.log();
     if(status==0)
     return;
 
@@ -192,21 +211,39 @@ function giveMove()
     but if thers a winning chance then attack
     this is how to select moves */
 
-    if(r==-1 && id!=0 && w!=1)
+    if(w==1)
+    {
+        r=att[1][0];
+        c=att[1][1];
+    }
+    else if (def.length>1)
     {
         r=def[1][0];
         c=def[1][1];
     }
-    else if (r==-1)
+    else if(w==2)
     {
         r=att[1][0];
         c=att[1][1];
+    }
+    else{
+        i=(Math.random()*(att.length-1))+1;
+        i=Math.floor(i);
+        r=att[i][0];
+        c=att[i][1];
     }
 
         arr[r][c].innerHTML=symbol[1];
         arr[r][c].title='o';
         isymb=0;
-    input=true;
+        if(w==1)
+        {
+            status=0;
+            result='o';
+            ending();
+        }
+        else
+        input=true;
 }
 
 function ending()
