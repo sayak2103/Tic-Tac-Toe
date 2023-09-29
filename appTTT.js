@@ -7,7 +7,7 @@ let comp=document.querySelector("#comp");
 let hum=document.querySelector("#human");
 let ins=document.querySelector(".instruct");
 let gameMode='d';
-let symbol=["<i class='fa-solid fa-xmark fa-8x'></i>","<i class='fa-solid fa-o fa-7x'></i>"]// 
+let symbol=["<i class='fa-solid fa-xmark fa-7x'></i>","<i class='fa-solid fa-o fa-6x'></i>"]// 
 let isymb;
 let countx,counto,r,c;
 

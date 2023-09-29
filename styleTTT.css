@@ -9,8 +9,8 @@ body{
 }
 
 .outbox{
-    height: 25rem;
-    width: 25rem;
+    height: 23rem;
+    width: 23rem;
     display: inline-flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -46,7 +46,7 @@ body{
 
 @media (min-width : 876px){
     .buttons button{
-        height: 4.5rem;
+        height: 4rem;
         width: 6.5rem;
         font-size: large;
     }
