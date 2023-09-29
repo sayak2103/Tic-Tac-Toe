@@ -39,7 +39,31 @@ body{
 }
 
 .buttons{
-    width: 33%;
+    width: 50%;
     display: inline-flex;
     justify-content: space-evenly;
+}
+
+@media (min-width : 876px){
+    .buttons button{
+        height: 4.5rem;
+        width: 6.5rem;
+        font-size: large;
+    }
+    #start{
+        font-size: x-large;
+    }
+}
+
+@media (max-width : 576px){
+    .buttons button{
+        text-align: center;
+        height : 4rem;
+        width: 30%;
+        font-size: medium;
+    }
+    .outbox{
+        height:20rem;
+        width:20rem;
+    }
 }
